@@ -1,6 +1,7 @@
 import os.path
 from flask import Flask, request, jsonify
 import base64
+import asyncio
 import hashlib
 
 from car_classification import get_car_type
@@ -16,11 +17,11 @@ processing_status = {} # Uploaded Processing Ready or Error
 processed_segments = {}
 
 
-def get_segments_from_image(output_file, image_hash, path):
+async def get_segments_from_image(output_file, image_hash, path):
     # return image_to_polygon_vertices(output_file)
     return img_to_segments(output_file, image_hash, path)
 
-def process_image(image_hash, image_data): # all temporary files and folders get removed
+async def process_image(image_hash, image_data): # all temporary files and folders get removed
     processing_status[image_hash] = "Processing"
     try:
         initial_file = f"/img/{image_hash}.png"
@@ -32,15 +33,15 @@ def process_image(image_hash, image_data): # all temporary files and folders get
         file = open(initial_file_split, 'w') # Make sure file is ready to be written in
         file.close()
 
-        processed_segments[image_hash]["Type"] =  get_car_type(initial_file)
+        processed_segments[image_hash]["Type"] = await get_car_type(initial_file)
 
-        interface_start(initial_file, initial_file_split)
+        await interface_start(initial_file, initial_file_split)
 
-        get_segments_from_image(initial_file_split, image_hash, "/seg_img/")
+        await get_segments_from_image(initial_file_split, image_hash, "/seg_img/")
 
         for i in  range(len(os.listdir(f"/seg_img/{image_hash}"))):
             segment_file_name = os.listdir(f"/seg_img/{image_hash}")[i]
-            processed_segments[image_hash][i] = image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
+            processed_segments[image_hash][i] = await image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
 
         for i in os.listdir(f"/seg_img/{image_hash}"):
             os.remove(i) # !
@@ -67,7 +68,7 @@ def upload_image():
         image_hash = hashlib.sha256(image_data)
 
         processing_status[image_hash] = "Uploaded"
-        process_image(image_hash, image_data)
+        asyncio.ensure_future(process_image(image_hash, image_data))
 
         return jsonify({'message': 'Image uploaded successfully', 'image_hash':image_hash}), 200
 
