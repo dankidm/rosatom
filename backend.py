@@ -6,6 +6,9 @@ import hashlib
 
 from img_to_segments import img_to_segments
 from poligons_from_seg import image_to_polygon_vertices
+from segment_interface import interface_start
+
+print("Booting up the backend...\nPlease, don't forget to add the weights and latest checkpoint to the project folder!\n")
 
 app = Flask(__name__)
 
@@ -20,10 +23,18 @@ async def get_segments_from_image(output_file, image_hash, path):
 async def process_image(image_hash, image_data): # all temporary files and folders get removed
     processing_status[image_hash] = "Processing"
     try:
-        output_file = f"/img/{image_hash}.png"
-        with open(output_file, "wb") as file:
+        initial_file = f"/img/{image_hash}.png"
+        initial_file_split = f'/img/{image_hash}_split.png'
+
+        with open(initial_file, "wb") as file:
             file.write(image_data)
-        await get_segments_from_image(output_file, image_hash, "/seg_img/")
+
+        file = open(initial_file_split, 'w') # Make sure file is ready to be written in
+        file.close()
+
+        await interface_start(initial_file, initial_file_split)
+
+        await get_segments_from_image(initial_file_split, image_hash, "/seg_img/")
         for i in  range(len(os.listdir(f"/seg_img/{image_hash}"))):
             segment_file_name = os.listdir(f"/seg_img/{image_hash}")[i]
             processed_segments[image_hash][i] = await image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
@@ -31,7 +42,8 @@ async def process_image(image_hash, image_data): # all temporary files and folde
         for i in os.listdir(f"/seg_img/{image_hash}"):
             os.remove(i) # !
         os.rmdir(f"/seg_img/{image_hash}") # !
-        os.remove(output_file) # !
+        os.remove(initial_file) # !
+        os.remove(initial_file_split) # !
         processing_status[image_hash] = "Ready"
     except Exception as e:
         processing_status[image_hash] = "Error"
