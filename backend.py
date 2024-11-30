@@ -1,7 +1,12 @@
+import os.path
+
 from flask import Flask, request, jsonify
 import base64
 import asyncio
 import hashlib
+
+import poligons_from_seg
+from poligons_from_seg import image_to_polygon_vertices
 
 app = Flask(__name__)
 
@@ -9,18 +14,22 @@ processing_status = {} # Uploaded Processing Ready or Error
 processed_segments = {}
 
 
-async def getSegmentsFromImage(image_data):
-    return 0
+async def get_segments_from_image(output_file):
+    return image_to_polygon_vertices(output_file)
 
-async def process_image(image_id, image_data):
-    processing_status[image_id] = "Processing"
+async def process_image(image_hash, image_data):
+    processing_status[image_hash] = "Processing"
     try:
-        segments = await getSegmentsFromImage(image_data)
-        processed_segments[image_id] = segments
-        processing_status[image_id] = "Ready"
+        output_file = os.path.join("/img", f"{image_hash}.png")
+        with open(output_file, "wb") as file:
+            file.write(image_data)
+        segments = await get_segments_from_image(output_file)
+        processed_segments[image_hash] = segments
+        os.remove(output_file)
+        processing_status[image_hash] = "Ready"
     except Exception as e:
-        processing_status[image_id] = "Error"
-        print(f"Exception accured when processing image {image_id}: {e}")
+        processing_status[image_hash] = "Error"
+        print(f"Exception accured when processing image {image_hash}: {e}")
 
 
 # POST "/" - загрузка изображения и начало обработки
