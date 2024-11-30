@@ -1,11 +1,10 @@
 import os.path
-
 from flask import Flask, request, jsonify
 import base64
 import asyncio
 import hashlib
 
-import poligons_from_seg
+from img_to_segments import img_to_segments
 from poligons_from_seg import image_to_polygon_vertices
 
 app = Flask(__name__)
@@ -14,18 +13,25 @@ processing_status = {} # Uploaded Processing Ready or Error
 processed_segments = {}
 
 
-async def get_segments_from_image(output_file):
-    return image_to_polygon_vertices(output_file)
+async def get_segments_from_image(output_file, image_hash, path):
+    # return image_to_polygon_vertices(output_file)
+    return img_to_segments(output_file, image_hash, path)
 
-async def process_image(image_hash, image_data):
+async def process_image(image_hash, image_data): # all temporary files and folders get removed
     processing_status[image_hash] = "Processing"
     try:
-        output_file = os.path.join("/img", f"{image_hash}.png")
+        output_file = f"/img/{image_hash}.png"
         with open(output_file, "wb") as file:
             file.write(image_data)
-        segments = await get_segments_from_image(output_file)
-        processed_segments[image_hash] = segments
-        os.remove(output_file)
+        await get_segments_from_image(output_file, image_hash, "/seg_img/")
+        for i in  range(len(os.listdir(f"/seg_img/{image_hash}"))):
+            segment_file_name = os.listdir(f"/seg_img/{image_hash}")[i]
+            processed_segments[image_hash][i] = await image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
+
+        for i in os.listdir(f"/seg_img/{image_hash}"):
+            os.remove(i) # !
+        os.rmdir(f"/seg_img/{image_hash}") # !
+        os.remove(output_file) # !
         processing_status[image_hash] = "Ready"
     except Exception as e:
         processing_status[image_hash] = "Error"
