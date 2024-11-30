@@ -4,6 +4,7 @@ import base64
 import asyncio
 import hashlib
 
+from car_classification import get_car_type
 from img_to_segments import img_to_segments
 from poligons_from_seg import image_to_polygon_vertices
 from segment_interface import interface_start
@@ -32,9 +33,12 @@ async def process_image(image_hash, image_data): # all temporary files and folde
         file = open(initial_file_split, 'w') # Make sure file is ready to be written in
         file.close()
 
+        processed_segments[image_hash]["Type"] = await get_car_type(initial_file)
+
         await interface_start(initial_file, initial_file_split)
 
         await get_segments_from_image(initial_file_split, image_hash, "/seg_img/")
+
         for i in  range(len(os.listdir(f"/seg_img/{image_hash}"))):
             segment_file_name = os.listdir(f"/seg_img/{image_hash}")[i]
             processed_segments[image_hash][i] = await image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
@@ -64,7 +68,6 @@ def upload_image():
         image_hash = hashlib.sha256(image_data)
 
         processing_status[image_hash] = "Uploaded"
-
         asyncio.ensure_future(process_image(image_hash, image_data))
 
         return jsonify({'message': 'Image uploaded successfully', 'image_hash':image_hash}), 200
