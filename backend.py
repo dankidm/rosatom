@@ -23,8 +23,10 @@ def get_segments_from_image(output_file, image_hash, path):
 def process_image(image_hash, image_data): # all temporary files and folders get removed
     processing_status[image_hash] = "Processing"
     try:
-        initial_file = f"/img/{image_hash}.png"
-        initial_file_split = f'/img/{image_hash}_split.png'
+        # initial_file = f"/img/{image_hash}.png"
+        initial_file = os.path.join("img", f"{image_hash}.png")
+        # initial_file_split = f'/img/{image_hash}_split.png''
+        initial_file_split = os.path.join("img", f"{image_hash}_split.png")
 
         with open(initial_file, "wb") as file:
             file.write(image_data)
@@ -38,6 +40,7 @@ def process_image(image_hash, image_data): # all temporary files and folders get
 
         get_segments_from_image(initial_file_split, image_hash, "/seg_img/")
 
+        processed_segments[image_hash] = {}
         for i in  range(len(os.listdir(f"/seg_img/{image_hash}"))):
             segment_file_name = os.listdir(f"/seg_img/{image_hash}")[i]
             processed_segments[image_hash][i] = image_to_polygon_vertices(f"/seg_img/{image_hash}/{segment_file_name}")
@@ -50,7 +53,7 @@ def process_image(image_hash, image_data): # all temporary files and folders get
         processing_status[image_hash] = "Ready"
     except Exception as e:
         processing_status[image_hash] = "Error"
-        print(f"Exception accured when processing image {image_hash}: {e}")
+        print(f"Exception occurred when processing image {image_hash}: {e}")
 
 
 # POST "/" - загрузка изображения и начало обработки
@@ -64,7 +67,7 @@ def upload_image():
             return jsonify({'error': 'No image provided'}), 400
 
         image_data = base64.b64decode(base64_image)
-        image_hash = hashlib.sha256(image_data)
+        image_hash = hashlib.sha256(image_data).hexdigest()
 
         processing_status[image_hash] = "Uploaded"
         process_image(image_hash, image_data)
