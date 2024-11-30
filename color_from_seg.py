@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Загрузка изображения
-image = cv2.imread('masks/IMG_9208.png')
+image = cv2.imread('segmented_image.png')
 
 # Получение уникальных цветов (предполагается, что каждый сегмент имеет уникальный цвет)
 unique_colors = np.unique(image.reshape(-1, image.shape[2]), axis=0)
