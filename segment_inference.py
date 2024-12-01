@@ -23,7 +23,7 @@ model = MAnet(
 )
 
 # Путь к файлу с весами
-weights_path = "weights/model_weights.pth"
+weights_path = "weights/segmentation/manet_best.pth"
 
 # Загрузка весов
 try:
