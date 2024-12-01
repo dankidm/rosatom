@@ -1,16 +1,20 @@
 print("Booting up the backend...\nPlease, don't forget to add the weights and latest checkpoint to the project folder!\n")
 
+import sys
 import os.path
 from os.path import exists
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../cv')))
+
 
 from flask import Flask, request, jsonify
 import base64
 import hashlib
 
-from cv.cartype_classification import get_car_type
-from cv.img_to_segments import img_to_segments
-from cv.poligons_from_seg import image_to_polygon_vertices
-from cv.segment_inference import interface_start
+from cartype_classification import get_car_type
+from img_to_segments import img_to_segments
+from poligons_from_seg import image_to_polygon_vertices
+from segment_inference import interface_start
 
 
 app = Flask(__name__)
