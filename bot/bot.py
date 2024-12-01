@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 NUM_CLASSES = 7
 model = models.resnet18(pretrained=False)
 model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
-weights_path = "weights/classification/resnet18.pth"
+weights_path = "cv/weights/classification/resnet18.pth"
 
 try:
     checkpoint = torch.load(weights_path, map_location=torch.device("cpu"))
