@@ -48,7 +48,8 @@ model.eval()
 
 
 def load_image(image_path, transform=None):
-    image = Image.open(image_path).convert("RGB")
+    with Image.open(image_path).convert("RGB") as image:
+        image = Image.open(image_path).convert("RGB")
     if transform:
         image = transform(image)
     return image
@@ -88,9 +89,11 @@ def save_multiclass_segmentation(output, output_path, num_classes=22):
 
 
 def interface_start(input_image_path, output_path):
+    print(0)
     image_path = input_image_path
+
     input_image = load_image(image_path, transform=transform)
-    print(type(input_image))
+    print(1)
     input_image = input_image.unsqueeze(0).to(device)
     with torch.no_grad():
         output = model(input_image)
