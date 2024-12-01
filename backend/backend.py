@@ -6,7 +6,6 @@ from os.path import exists
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../cv')))
 
-
 from flask import Flask, request, jsonify
 import base64
 import hashlib

@@ -2,3 +2,4 @@ masks
 segments
 weights
  .idea/
+__pycache__
