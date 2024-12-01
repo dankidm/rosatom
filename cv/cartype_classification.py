@@ -3,12 +3,15 @@ import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
 
+IMAGE_PATH = ""
+NUM_CLASSES = 7  
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-NUM_CLASSES = 7  # Задайте количество классов для классификации
 model = models.resnet18(pretrained=False)
-model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)  # Меняем последний слой на выход с нужным количеством классов
+model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)  
 model = model.to(device)
 
 weights_path = "weights/classification/resnet18.pth"
@@ -44,8 +47,7 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
 ])
 
-image_path = "Car damages 1054.png"
-input_image = load_image(image_path, transform=transform)
+input_image = load_image(IMAGE_PATH, transform=transform)
 input_image = input_image.unsqueeze(0).to(device) 
 
 with torch.no_grad():

@@ -5,47 +5,35 @@ import matplotlib.pyplot as plt
 from segmentation_models_pytorch import MAnet
 import numpy as np
 
+CLASSES = 22  
+WEIGHTS_PATH = "weights/segmentation/manet_best.pth"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-
-ENCODER = "resnet34"  # Должен соответствовать энкодеру, для которого были сохранены веса
-CLASSES = 22  # Количество классов сегментации (включая фон)
-ACTIVATION = "sigmoid"  # Активация на выходе
-
-# Создание модели
 model = MAnet(
-    # encoder_name=ENCODER,
-    # encoder_weights=None,  # Предобученные веса не загружаем здесь
     classes=CLASSES,
-    # activation=ACTIVATION
 )
 
-# Путь к файлу с весами
-weights_path = "weights/segmentation/manet_best.pth"
 
-# Загрузка весов
 try:
-    checkpoint = torch.load(weights_path, map_location=torch.device("cpu"))
+    checkpoint = torch.load(WEIGHTS_PATH, map_location=torch.device("cpu"))
     
-    # Если файл содержит дополнительные ключи, такие как "model_state_dict"
     if "model_state_dict" in checkpoint:
-        state_dict = checkpoint["model_state_dict"]  # Извлекаем только параметры модели
+        state_dict = checkpoint["model_state_dict"] 
     else:
-        state_dict = checkpoint  # Если файл содержит только state_dict
+        state_dict = checkpoint  
 
-    # Загрузка весов в модель
     model.load_state_dict(state_dict)
     print("Weights loaded successfully.")
 except FileNotFoundError:
-    print(f"Error: Weights file not found at {weights_path}.")
+    print(f"Error: Weights file not found at {WEIGHTS_PATH}.")
     exit()
 except Exception as e:
     print(f"Error loading weights: {e}")
     exit()
 
-# Переключение модели в режим оценки
+
 model.eval()
 
 def load_image(image_path, transform=None):
@@ -73,26 +61,22 @@ def save_multiclass_segmentation(output, output_path, num_classes=22):
     :param output_path: Путь для сохранения результата.
     :param num_classes: Общее количество классов.
     """
-    # Определяем цвета для классов
-    np.random.seed(42)  # Для детерминированности
+    np.random.seed(42) 
     class_colors = np.random.randint(0, 255, size=(num_classes, 3), dtype=np.uint8)
 
-    # Создаём цветную маску
     height, width = output.shape
     mask = np.zeros((height, width, 3), dtype=np.uint8)
 
     for cls in range(num_classes):
         mask[output == cls] = class_colors[cls]
 
-    # Сохранение результата
     segmented_image = Image.fromarray(mask)
     segmented_image.save(output_path)
     print(f"Segmented image saved to {output_path}")
 
-# Пример использования
 with torch.no_grad():
     output = model(input_image)
-    output = torch.argmax(output, dim=1).squeeze().cpu().numpy()  # Получаем классы для каждого пикселя
+    output = torch.argmax(output, dim=1).squeeze().cpu().numpy() 
 
 save_multiclass_segmentation(output, "segmented_image.png", num_classes=22)
 
