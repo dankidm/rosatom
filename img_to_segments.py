@@ -8,7 +8,6 @@ def img_to_segments(img_path, img_hash, save_to_path):
 
     # Получение уникальных цветов (предполагается, что каждый сегмент имеет уникальный цвет)
     unique_colors = np.unique(image.reshape(-1, image.shape[2]), axis=0)
-
     # Создание изображений для каждого сегмента
     for i, color in enumerate(unique_colors):
         # Создаем маску для текущего сегмента
@@ -18,5 +17,5 @@ def img_to_segments(img_path, img_hash, save_to_path):
         segment_image = cv2.bitwise_and(image, image, mask=mask)
 
         # Сохранение результата
-        output_path = f'{save_to_path}/{img_hash}/segment_{i + 1}.png'
+        output_path = f'{save_to_path}/segment_{i + 1}.png'
         cv2.imwrite(output_path, segment_image)

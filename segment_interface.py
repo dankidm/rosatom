@@ -89,11 +89,9 @@ def save_multiclass_segmentation(output, output_path, num_classes=22):
 
 
 def interface_start(input_image_path, output_path):
-    print(0)
     image_path = input_image_path
 
     input_image = load_image(image_path, transform=transform)
-    print(1)
     input_image = input_image.unsqueeze(0).to(device)
     with torch.no_grad():
         output = model(input_image)

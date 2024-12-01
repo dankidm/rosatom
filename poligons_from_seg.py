@@ -31,7 +31,7 @@ def image_to_polygon_vertices(image_path):
     approx_vertices = cv2.approxPolyDP(polygon_contour, epsilon, True)
 
     # Extract vertices as a list of (x, y) tuples
-    vertices = [(point[0][0], point[0][1]) for point in approx_vertices]
+    vertices = [(int(point[0][0]), int(point[0][1])) for point in approx_vertices]
 
     return vertices
 

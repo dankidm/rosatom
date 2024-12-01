@@ -47,11 +47,13 @@ def process_image(image_hash, image_data):
         interface_start(initial_file, initial_file_split)
 
         # Process and store segments
-        get_segments_from_image(initial_file_split, image_hash, seg_dir)
+        img_to_segments(initial_file_split, image_hash, seg_dir)
+
 
         for segment_file_name in os.listdir(seg_dir):
             segment_path = os.path.join(seg_dir, segment_file_name)
             processed_segments[image_hash][segment_file_name] = image_to_polygon_vertices(segment_path)
+
 
         # Cleanup temporary files and directory
         for segment_file_name in os.listdir(seg_dir):
@@ -62,7 +64,6 @@ def process_image(image_hash, image_data):
         os.remove(initial_file_split)
 
         processing_status[image_hash] = "Ready"
-        print("fin")
     except Exception as e:
         processing_status[image_hash] = "Error"
         print(f"Exception occurred when processing image {image_hash}: {e}")
@@ -118,7 +119,7 @@ def get_segments(image_id):
         if image_id in processing_status and processing_status[image_id] == "processing":
             return jsonify({"error": "Processing not completed yet"}), 400
         return jsonify({"error": "Image ID not found"}), 404
-
+    print(processed_segments[image_id])
     return jsonify({"segments": processed_segments[image_id]})
 
 
