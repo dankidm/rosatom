@@ -7,10 +7,10 @@ from flask import Flask, request, jsonify
 import base64
 import hashlib
 
-from car_classification import get_car_type
-from img_to_segments import img_to_segments
-from poligons_from_seg import image_to_polygon_vertices
-from segment_interface import interface_start
+from cv.cartype_classification import get_car_type
+from cv.poligons_from_seg import img_to_segments
+from cv.poligons_from_seg import image_to_polygon_vertices
+from cv.segment_inference import interface_start
 
 
 app = Flask(__name__)
@@ -93,6 +93,7 @@ def upload_image():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 # @app.route('/', methods=['POST'])
 # def upload_image():
 #     try:
