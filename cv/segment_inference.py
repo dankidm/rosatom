@@ -77,5 +77,14 @@ with torch.no_grad():
     output = model(input_image)
     output = torch.argmax(output, dim=1).squeeze().cpu().numpy() 
 
+def interface_start(input_image_path, output_path):
+    image_path = input_image_path
+
+    input_image = load_image(image_path, transform=transform)
+    input_image = input_image.unsqueeze(0).to(device)
+    with torch.no_grad():
+        output = model(input_image)
+        output = torch.argmax(output, dim=1).squeeze().cpu().numpy()  # Получаем классы для каждого пиксе
+
 save_multiclass_segmentation(output, "segmented_image.png", num_classes=22)
 

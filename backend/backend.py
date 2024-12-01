@@ -8,7 +8,7 @@ import base64
 import hashlib
 
 from cv.cartype_classification import get_car_type
-from cv.poligons_from_seg import img_to_segments
+from cv.img_to_segments import img_to_segments
 from cv.poligons_from_seg import image_to_polygon_vertices
 from cv.segment_inference import interface_start
 
