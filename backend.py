@@ -71,52 +71,52 @@ def process_image(image_hash, image_data):
 
 
 # POST "/" - загрузка изображения и начало обработки
-# @app.route('/', methods=['POST'])
-# def upload_image():
-#     try:
-#         data = request.json
-#         base64_image = data.get('image', '')
-#
-#         if not base64_image:
-#             return jsonify({'error': 'No image provided'}), 400
-#
-#         image_data = base64.b64decode(base64_image)
-#         image_hash = hashlib.sha256(image_data).hexdigest()
-#
-#         if image_hash in processed_segments:
-#             return jsonify({'message': f"Image already calculated. just use it",'image_hash':image_hash}), 200
-#
-#         processing_status[image_hash] = "Uploaded"
-#         process_image(image_hash, image_data)
-#
-#         return jsonify({'message': 'Image uploaded successfully', 'image_hash':image_hash}), 200
-#
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
 @app.route('/', methods=['POST'])
 def upload_image():
     try:
         data = request.json
-        image_path = data.get('image_path', '')
+        base64_image = data.get('image', '')
 
-        if not image_path or not os.path.isfile(image_path):
-            return jsonify({'error': 'Invalid or missing image path'}), 400
+        if not base64_image:
+            return jsonify({'error': 'No image provided'}), 400
 
-        with open(image_path, 'rb') as img_file:
-            image_data = img_file.read()
-
+        image_data = base64.b64decode(base64_image)
         image_hash = hashlib.sha256(image_data).hexdigest()
 
         if image_hash in processed_segments:
-            return jsonify({'message': f"Image already calculated. Just use it", 'image_hash': image_hash}), 200
+            return jsonify({'message': f"Image already calculated. just use it",'image_hash':image_hash}), 200
 
         processing_status[image_hash] = "Uploaded"
         process_image(image_hash, image_data)
 
-        return jsonify({'message': 'Image uploaded successfully', 'image_hash': image_hash}), 200
+        return jsonify({'message': 'Image uploaded successfully', 'image_hash':image_hash}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+# @app.route('/', methods=['POST'])
+# def upload_image():
+#     try:
+#         data = request.json
+#         image_path = data.get('image_path', '')
+#
+#         if not image_path or not os.path.isfile(image_path):
+#             return jsonify({'error': 'Invalid or missing image path'}), 400
+#
+#         with open(image_path, 'rb') as img_file:
+#             image_data = img_file.read()
+#
+#         image_hash = hashlib.sha256(image_data).hexdigest()
+#
+#         if image_hash in processed_segments:
+#             return jsonify({'message': f"Image already calculated. Just use it", 'image_hash': image_hash}), 200
+#
+#         processing_status[image_hash] = "Uploaded"
+#         process_image(image_hash, image_data)
+#
+#         return jsonify({'message': 'Image uploaded successfully', 'image_hash': image_hash}), 200
+#
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 
 
 # GET "/" - возвращает все созданные идентификаторы
