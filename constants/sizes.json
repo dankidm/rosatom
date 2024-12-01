@@ -1,0 +1,70 @@
+{
+  "vehicles": {
+    "Convertible": {
+      "total_area_m2": 6.8,
+      "parts": {
+        "hood": { "area_m2": 1.3, "relation_percent": 20 },
+        "roof_retractable": { "area_m2": 1.0, "relation_percent": 15 },
+        "front_doors": { "area_m2": 1.6, "relation_percent": 24 },
+        "fenders": { "area_m2": 0.7, "relation_percent": 10 }
+      }
+    },
+    "Coupe": {
+      "total_area_m2": 7.4,
+      "parts": {
+        "hood": { "area_m2": 1.4, "relation_percent": 21 },
+        "roof": { "area_m2": 1.3, "relation_percent": 19 },
+        "front_doors": { "area_m2": 2.0, "relation_percent": 30 },
+        "fenders": { "area_m2": 0.7, "relation_percent": 10 }
+      }
+    },
+    "Hatchback": {
+      "total_area_m2": 7.8,
+      "parts": {
+        "hood": { "area_m2": 1.2, "relation_percent": 17 },
+        "roof": { "area_m2": 1.6, "relation_percent": 23 },
+        "front_doors": { "area_m2": 1.6, "relation_percent": 23 },
+        "rear_doors": { "area_m2": 1.2, "relation_percent": 17 },
+        "fenders": { "area_m2": 0.6, "relation_percent": 9 }
+      }
+    },
+    "Pick-Up": {
+      "total_area_m2": 9.5,
+      "parts": {
+        "hood": { "area_m2": 1.7, "relation_percent": 18 },
+        "roof": { "area_m2": 2.0, "relation_percent": 21 },
+        "front_doors": { "area_m2": 1.5, "relation_percent": 16 },
+        "fenders": { "area_m2": 0.8, "relation_percent": 8 }
+      }
+    },
+    "SUV": {
+      "total_area_m2": 11.3,
+      "parts": {
+        "hood": { "area_m2": 2.0, "relation_percent": 18 },
+        "roof": { "area_m2": 2.5, "relation_percent": 23 },
+        "front_doors": { "area_m2": 2.2, "relation_percent": 21 },
+        "rear_doors": { "area_m2": 1.8, "relation_percent": 16 },
+        "fenders": { "area_m2": 1.0, "relation_percent": 9 }
+      }
+    },
+    "Sedan": {
+      "total_area_m2": 9.2,
+      "parts": {
+        "hood": { "area_m2": 1.5, "relation_percent": 20 },
+        "roof": { "area_m2": 2.0, "relation_percent": 26 },
+        "front_doors": { "area_m2": 1.8, "relation_percent": 24 },
+        "rear_doors": { "area_m2": 1.6, "relation_percent": 21 },
+        "fenders": { "area_m2": 0.8, "relation_percent": 10 }
+      }
+    },
+    "VAN": {
+      "total_area_m2": 12.0,
+      "parts": {
+        "hood": { "area_m2": 2.0, "relation_percent": 17 },
+        "roof": { "area_m2": 3.0, "relation_percent": 25 },
+        "front_doors": { "area_m2": 2.2, "relation_percent": 18 },
+        "fenders": { "area_m2": 0.9, "relation_percent": 7 }
+      }
+    }
+  }
+}

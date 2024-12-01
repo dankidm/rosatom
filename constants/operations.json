@@ -1,0 +1,43 @@
+{
+    "operations": {
+      "painting": {
+        "description": "Окрашивание кузовных деталей",
+        "components": {
+          "hood": { "required_area_m2": 1.5, "paint_type": "acrylic", "layers": 3, "paint_cost_per_m2": 15.0 },
+          "roof": { "required_area_m2": 2.0, "paint_type": "acrylic", "layers": 3, "paint_cost_per_m2": 15.0 },
+          "front_doors": { "required_area_m2": 1.8, "paint_type": "acrylic", "layers": 3, "paint_cost_per_m2": 15.0 },
+          "rear_doors": { "required_area_m2": 1.6, "paint_type": "acrylic", "layers": 3, "paint_cost_per_m2": 15.0 }
+        }
+      },
+      "repairement": {
+        "description": "Ремонт и восстановление кузовных деталей",
+        "components": {
+          "hood": { 
+            "damage_type": "dent", 
+            "repair_method": "pdr", 
+            "estimated_time_minutes": 120, 
+            "cost_per_hour": 25.0 
+          },
+          "roof": { 
+            "damage_type": "scratch", 
+            "repair_method": "sanding_and_painting", 
+            "estimated_time_minutes": 180, 
+            "cost_per_hour": 25.0 
+          },
+          "front_doors": { 
+            "damage_type": "crack", 
+            "repair_method": "welding_and_sanding", 
+            "estimated_time_minutes": 150, 
+            "cost_per_hour": 25.0 
+          },
+          "rear_doors": { 
+            "damage_type": "dent", 
+            "repair_method": "pdr", 
+            "estimated_time_minutes": 90, 
+            "cost_per_hour": 25.0 
+          }
+        }
+      }
+    }
+  }
+  
