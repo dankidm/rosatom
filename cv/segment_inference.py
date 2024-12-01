@@ -15,7 +15,6 @@ model = MAnet(
     classes=CLASSES,
 )
 
-
 try:
     checkpoint = torch.load(WEIGHTS_PATH, map_location=torch.device("cpu"))
     
