@@ -119,7 +119,6 @@ def get_segments(image_id):
         if image_id in processing_status and processing_status[image_id] == "processing":
             return jsonify({"error": "Processing not completed yet"}), 400
         return jsonify({"error": "Image ID not found"}), 404
-    print(processed_segments[image_id])
     return jsonify({"segments": processed_segments[image_id]})
 
 

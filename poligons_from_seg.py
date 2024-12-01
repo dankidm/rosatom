@@ -21,7 +21,7 @@ def image_to_polygon_vertices(image_path):
     contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if not contours:
-        raise ValueError("No polygon detected in the image.")
+        return
 
     # Assuming the polygon is the largest contour
     polygon_contour = max(contours, key=cv2.contourArea)
