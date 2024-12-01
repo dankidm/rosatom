@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 NUM_CLASSES = 7
 model = models.resnet18(pretrained=False)
 model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
-weights_path = "cv/weights/classification/resnet18.pth"
+weights_path = "bot/resnet18.pth"
 
 try:
     checkpoint = torch.load(weights_path, map_location=torch.device("cpu"))
@@ -65,7 +65,7 @@ CLASS_STANDARD_VALUES = {
             "front_doors": 2.2,
             "rear_doors": 1.8,
         },
-        "paint_cost_per_m2": 500,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.8,
     },
     "Sedan": {
@@ -76,7 +76,7 @@ CLASS_STANDARD_VALUES = {
             "front_doors": 1.8,
             "rear_doors": 1.6,
         },
-        "paint_cost_per_m2": 450,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.7,
     },
     "Coupe": {
@@ -86,7 +86,7 @@ CLASS_STANDARD_VALUES = {
             "fenders": 0.7,
             "front_doors": 2.0,
         },
-        "paint_cost_per_m2": 480,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.75,
     },
     "Hatchback": {
@@ -97,7 +97,7 @@ CLASS_STANDARD_VALUES = {
             "front_doors": 1.6,
             "rear_doors": 1.2,
         },
-        "paint_cost_per_m2": 460,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.7,
     },
     "Convertible": {
@@ -107,7 +107,7 @@ CLASS_STANDARD_VALUES = {
             "fenders": 0.7,
             "front_doors": 1.6,
         },
-        "paint_cost_per_m2": 500,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.8,
     },
     "Pick-Up": {
@@ -117,7 +117,7 @@ CLASS_STANDARD_VALUES = {
             "fenders": 1.0,
             "front_doors": 2.1,
         },
-        "paint_cost_per_m2": 550,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.85,
     },
     "Van": {
@@ -128,7 +128,7 @@ CLASS_STANDARD_VALUES = {
             "front_doors": 2.5,
             "rear_doors": 2.0,
         },
-        "paint_cost_per_m2": 520,
+        "paint_cost_per_m2": 1,
         "time_per_m2": 0.9,
     },
 }
@@ -180,14 +180,14 @@ async def process_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             part_time = area * time_per_m2
             total_cost += part_cost
             total_time += part_time
-            part_details.append(f"{part_name.capitalize()} - {part_cost:.2f} рублей")
+            part_details.append(f"{part_name.capitalize()} - {part_cost:.2f} м^2")
 
         # Формируем ответ
         response = (
             f"Результат: {class_name} с вероятностью {top_prob.item():.2f}\n\n"
             + "\n".join(part_details) +
-            f"\n\nОбщая стоимость: {total_cost:.2f} рублей\n"
-            f"Общее время: {total_time:.2f} часов"
+            f"\n\nОбщая площадь: {total_cost:.2f} м^2\n"
+            f"Общее время работы: {total_time:.2f} часов"
         )
 
         logger.info(f"Ответ: {response}")

@@ -3,3 +3,4 @@ segments
 weights
  .idea/
 __pycache__
+resnet18.pth
